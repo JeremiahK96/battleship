@@ -1,21 +1,28 @@
 #include "PlayGame.hpp"
+#include "Player.hpp"
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <memory>
 #include <cassert>
 
 bool PlayGame ()
 {
-    int players = QueryNumPlayers();
+    int num_players = QueryNumPlayers();
+    assert(num_players >= 0 && num_players <= 2);
+
+    std::vector <std::unique_ptr<Player>> players;
+    assert(players.empty());
 
     return QueryNewGame();
 }
 
 int QueryNumPlayers ()
 {
-    int players = -1;
+    int num_players = -1;
 
-    while (players < 0 || players > 2)
+    while (num_players < 0 || num_players > 2)
     {
         std::string input;
 
@@ -23,11 +30,10 @@ int QueryNumPlayers ()
         std::getline(std::cin, input);
 
         if (input.size() && std::isdigit(input.at(0)))
-            players = std::stoi(input);
+            num_players = std::stoi(input);
     }
-    assert(players >= 0 && players <= 2);
 
-    return players;
+    return num_players;
 }
 
 bool QueryNewGame ()
