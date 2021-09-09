@@ -15,6 +15,8 @@ bool PlayGame ()
     std::vector <std::unique_ptr<Player>> players;
     assert(players.empty());
 
+    AddPlayers(players, num_players);
+
     return QueryNewGame();
 }
 
@@ -34,6 +36,25 @@ int QueryNumPlayers ()
     }
 
     return num_players;
+}
+
+void AddPlayers(std::vector <std::unique_ptr<Player>> &players, int num_players)
+{
+    // Add all Human players.
+    for (int i = 0; i < num_players; ++i)
+    {
+        std::unique_ptr<Human> human = std::make_unique<Human>();
+        players.push_back(std::move(human));
+    }
+    assert(players.size() == num_players);
+
+    // Add all Computer players.
+    for (int i = num_players; i < 2; ++i)
+    {
+        std::unique_ptr<Computer> cmptr = std::make_unique<Computer>();
+        players.push_back(std::move(cmptr));
+    }
+    assert(players.size() == 2);
 }
 
 bool QueryNewGame ()

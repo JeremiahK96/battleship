@@ -5,7 +5,7 @@ int main (int argv, char **argc)
 {
     SplashScreen();
 
-    // keep playing games until user chooses to quit
+    // Keep playing games until user chooses to quit.
     while (PlayGame())
     {}
 
