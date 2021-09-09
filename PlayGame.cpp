@@ -1,8 +1,15 @@
+#include "PlayGame.hpp"
+
 #include <iostream>
 #include <string>
 #include <cassert>
 
 bool PlayGame ()
+{
+    return QueryNewGame();
+}
+
+bool QueryNewGame ()
 {
     std::string input;
     assert(input.empty());

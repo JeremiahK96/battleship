@@ -4,5 +4,6 @@
 
 void SplashScreen ()
 {
-    std::cout << "Welcome to battleship, a terminal-based navy combat game.\n";
+    std::cout
+        << "Welcome to battleship, a terminal-based navy combat game.\n\n";
 }
