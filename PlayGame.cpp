@@ -44,6 +44,7 @@ void AddPlayers(std::vector <std::unique_ptr<Player>> &players, int num_players)
     for (int i = 0; i < num_players; ++i)
     {
         std::unique_ptr<Human> human = std::make_unique<Human>();
+        human->PlaceShips();
         players.push_back(std::move(human));
     }
     assert(players.size() == num_players);

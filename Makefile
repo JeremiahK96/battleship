@@ -14,7 +14,7 @@ DEPS := $(SRCS:%.cpp=$(DEPDIR)%.d)
 
 # root target for linking compiled .o files into one binary
 $(TARGET) : $(OBJS)
-	$(CXX) -l pthread $^ -o $@
+	$(CXX) $^ -o $@
 
 # target to compile all .cpp files, generating .d files in the process
 $(OBJDIR)%.o : %.cpp $(DEPDIR)%.d | $(DEPDIR)
