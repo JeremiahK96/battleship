@@ -2,12 +2,23 @@
 
 #include "global.hpp"
 
-#include <array>
+#include <vector>
 
 class Player
 {
 protected:
-    std::array<unsigned char, global::board_area> board;
+    enum tile
+    {
+        TL_EMPTY,
+        TL_SHIP,
+        TL_NORTH,
+        TL_SOUTH,
+        TL_EAST,
+        TL_WEST
+    };
+    std::vector<tile> board;
+
+    void ClearBoard ();
 
 public:
     virtual void PlaceShips () = 0;
@@ -17,7 +28,8 @@ class Human :
     public Player
 {
 protected:
-    void display_ships ();
+    void DisplayBoard ();
+    char GetCharAtPos (int pos);
 
 public:
     void PlaceShips ();
