@@ -4,17 +4,72 @@
 #include <iostream>
 #include <string>
 
-void Human::PlaceShips()
+void Human::PlaceShips ()
 {
     ClearBoard();
     DisplayBoard();
+    PlaceShip(0);
 
-    // Display ship to add.
-    // Query position to place ship.
+    // Repeat for all ships.
+}
+
+void Human::PlaceShip (int ship_index)
+{
+    DisplayShip(ship_index);
+
+    int pos = QueryShipPosition();
+
     // Query direction of ship (north, south, east, west).
     // Verify ship placement does not overlap other ships or run off the board.
     // Add ship to ship-board.
-    // Repeat for all ships.
+}
+
+void Human::DisplayShip (int ship_index)
+{
+    int ship_size = global::ship_sizes[ship_index];
+
+    std::cout
+        << "Ship #" << ship_index + 1
+        << ", length = " << ship_size << ": <";
+    for (int i = 0; i < ship_size - 2; ++i)
+        std::cout << '/';
+    std::cout << ">\n";
+}
+
+int Human::QueryShipPosition ()
+{
+    int coord;
+
+    do
+    {
+        std::cout
+            << "Enter the alphanumeric coordinate to position the ship on: ";
+        coord = QueryCoordinate();
+    }
+    while (!global::CoordinateInBounds(coord) && board.at(coord) == TL_EMPTY);
+
+    return coord;
+}
+
+int Human::QueryCoordinate ()
+{
+    std::string input;
+    std::getline(std::cin, input);
+    if (input.length() < 2)
+        return -1;
+
+    unsigned char alpha = std::toupper(input.at(0));
+    unsigned char digit = input.at(1);
+    if (alpha < 'A' || alpha > char('A' + global::board_height - 1))
+        return -1;
+    if (digit < '1' || digit > '9')
+        return -1;
+
+    int x = std::stoi(input.substr(1)) - 1;
+    if (x >= global::board_width)
+        return -1;
+
+    return x + int(alpha - 'A') * global::board_width;
 }
 
 void Human::DisplayBoard ()
@@ -39,5 +94,5 @@ void Human::DisplayBoard ()
 
 char Human::GetCharAtPos (int pos)
 {
-    return "./^v><"[board.at(pos)];
+    return ".//^v><"[board.at(pos)];
 }

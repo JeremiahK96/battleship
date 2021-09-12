@@ -10,15 +10,17 @@ protected:
     enum tile
     {
         TL_EMPTY,
-        TL_SHIP,
+        TL_VERTICAL,
+        TL_HORIZONTAL,
         TL_NORTH,
         TL_SOUTH,
         TL_EAST,
         TL_WEST
     };
     std::vector<tile> board;
-
     void ClearBoard ();
+
+    virtual void PlaceShip (int ship_index) = 0;
 
 public:
     virtual void PlaceShips () = 0;
@@ -31,6 +33,12 @@ protected:
     void DisplayBoard ();
     char GetCharAtPos (int pos);
 
+    void PlaceShip (int ship_index);
+    void DisplayShip (int ship_index);
+    int QueryShipPosition ();
+    int QueryShipDirection ();
+    int QueryCoordinate ();
+
 public:
     void PlaceShips ();
 };
@@ -38,6 +46,9 @@ public:
 class Computer :
     public Player
 {
+protected:
+    void PlaceShip (int ship_index);
+
 public:
     void PlaceShips ();
 };
