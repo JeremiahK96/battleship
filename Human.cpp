@@ -17,10 +17,20 @@ void Human::PlaceShip (int ship_index)
 {
     DisplayShip(ship_index);
 
-    int pos = QueryShipPosition();
-    ship_direction dir =  QueryShipDirection();
+    int pos;
+    ship_direction dir;
 
-    // Verify ship placement does not overlap other ships or run off the board.
+    while (true)
+    {
+        pos = QueryShipPosition();
+        dir =  QueryShipDirection();
+
+        if (ShipOrientationIsValid(pos, dir, global::ship_sizes[ship_index]))
+            break;
+
+        std::cout << "Invalid ship orientation, please try again.\n";
+    }
+
     // Add ship to ship-board.
 }
 

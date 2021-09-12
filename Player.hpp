@@ -28,6 +28,7 @@ protected:
         WEST
     };
     virtual void PlaceShip (int ship_index) = 0;
+    bool ShipOrientationIsValid (int pos, ship_direction dir, int ship_len);
 
 public:
     virtual void PlaceShips () = 0;
