@@ -18,8 +18,8 @@ void Human::PlaceShip (int ship_index)
     DisplayShip(ship_index);
 
     int pos = QueryShipPosition();
+    ship_direction dir =  QueryShipDirection();
 
-    // Query direction of ship (north, south, east, west).
     // Verify ship placement does not overlap other ships or run off the board.
     // Add ship to ship-board.
 }
@@ -39,16 +39,43 @@ void Human::DisplayShip (int ship_index)
 int Human::QueryShipPosition ()
 {
     int coord;
-
     do
     {
         std::cout
             << "Enter the alphanumeric coordinate to position the ship on: ";
         coord = QueryCoordinate();
     }
-    while (!global::CoordinateInBounds(coord) && board.at(coord) == TL_EMPTY);
+    while (!global::CoordinateInBounds(coord) || board.at(coord) != TL_EMPTY);
 
     return coord;
+}
+
+Player::ship_direction Human::QueryShipDirection ()
+{
+    // North/South/East/West/Up/Down/Left/Right/Vertical/Horizontal
+    std::string valid_chars = "NSEWUDLRVH";
+    unsigned char input_char = ' ';
+    std::string input;
+
+    do
+    {
+        std::cout << "Enter the direction the ship should face: ";
+        std::getline(std::cin, input);
+        if (!input.empty())
+            input_char = std::toupper(input.at(0));
+    }
+    while (valid_chars.find_first_of(input_char) == std::string::npos);
+    // Loop until input_char can be found within valid_chars.
+
+    switch (input_char)
+    {
+        case 'N': case 'U': case 'H':   return NORTH;
+        case 'S': case 'D':             return SOUTH;
+        case 'E': case 'R': case 'V':   return EAST;
+        case 'W': case 'L':             return WEST;
+    }
+
+    throw std::logic_error("invalid user input accepted in Player::ship_direction Human::QueryShipDirection()");
 }
 
 int Human::QueryCoordinate ()

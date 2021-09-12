@@ -20,6 +20,13 @@ protected:
     std::vector<tile> board;
     void ClearBoard ();
 
+    enum ship_direction
+    {
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST
+    };
     virtual void PlaceShip (int ship_index) = 0;
 
 public:
@@ -36,7 +43,7 @@ protected:
     void PlaceShip (int ship_index);
     void DisplayShip (int ship_index);
     int QueryShipPosition ();
-    int QueryShipDirection ();
+    ship_direction QueryShipDirection ();
     int QueryCoordinate ();
 
 public:
