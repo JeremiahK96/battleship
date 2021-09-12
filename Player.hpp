@@ -28,7 +28,9 @@ protected:
         WEST
     };
     virtual void PlaceShip (int ship_index) = 0;
+    int GetShipDelta(Player::ship_direction dir);
     bool ShipOrientationIsValid (int pos, ship_direction dir, int ship_len);
+    void AddShip (int pos, ship_direction dir, int ship_len);
 
 public:
     virtual void PlaceShips () = 0;

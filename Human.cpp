@@ -7,41 +7,45 @@
 void Human::PlaceShips ()
 {
     ClearBoard();
-    DisplayBoard();
-    PlaceShip(0);
 
-    // Repeat for all ships.
+    int num_ships = sizeof(global::ship_sizes) / sizeof(global::ship_sizes[0]);
+    for (int i = 0; i < num_ships; ++i)
+    {
+        DisplayBoard();
+        PlaceShip(i);
+    }
 }
 
 void Human::PlaceShip (int ship_index)
 {
-    DisplayShip(ship_index);
-
     int pos;
     ship_direction dir;
+    int ship_len = global::ship_sizes[ship_index];
+
+    DisplayShip(ship_index);
 
     while (true)
     {
         pos = QueryShipPosition();
         dir =  QueryShipDirection();
 
-        if (ShipOrientationIsValid(pos, dir, global::ship_sizes[ship_index]))
+        if (ShipOrientationIsValid(pos, dir, ship_len))
             break;
 
         std::cout << "Invalid ship orientation, please try again.\n";
     }
 
-    // Add ship to ship-board.
+    AddShip(pos, dir, ship_len);
 }
 
 void Human::DisplayShip (int ship_index)
 {
-    int ship_size = global::ship_sizes[ship_index];
+    int ship_length = global::ship_sizes[ship_index];
 
     std::cout
         << "Ship #" << ship_index + 1
-        << ", length = " << ship_size << ": <";
-    for (int i = 0; i < ship_size - 2; ++i)
+        << ", length = " << ship_length << ": <";
+    for (int i = 0; i < ship_length - 2; ++i)
         std::cout << '/';
     std::cout << ">\n";
 }
@@ -131,5 +135,16 @@ void Human::DisplayBoard ()
 
 char Human::GetCharAtPos (int pos)
 {
-    return ".//^v><"[board.at(pos)];
+    switch (board.at(pos))
+    {
+        case TL_EMPTY:      return '.';
+        case TL_VERTICAL:   return '/';
+        case TL_HORIZONTAL: return '/';
+        case TL_NORTH:      return '^';
+        case TL_SOUTH:      return 'v';
+        case TL_EAST:       return '<';
+        case TL_WEST:       return '>';
+    }
+
+    throw std::logic_error("invalid tile value in char Human::GetCharAtPos(int pos)");
 }
