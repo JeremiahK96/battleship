@@ -10,7 +10,6 @@
 void global::DoAsserts ()
 {
     AssertCoordinateInBounds();
-    AssertIsValidAlphaNumeric();
 }
 
 void global::SplashScreen ()
@@ -19,9 +18,9 @@ void global::SplashScreen ()
         << "Welcome to battleship, a terminal-based navy combat game.\n\n";
 }
 
-bool global::CoordinateInBounds (unsigned int coord)
+bool global::CoordinateInBounds (int coord)
 {
-    return coord < board_area;
+    return coord >= 0 && coord < board_width * board_height;
 }
 
 void global::AssertCoordinateInBounds ()
@@ -40,9 +39,9 @@ bool global::IsValidAlphaNumeric (const std::string &alphanum)
     unsigned char alpha = std::toupper(alphanum.at(0));
     unsigned char digit = alphanum.at(1);
 
-    if (alpha < 'A' || alpha >= char('A' + board_height))
+    if (alpha < 'A' || alpha >= char('A' + global::board_height))
         return false;
-    if (!std::isdigit(digit) || std::stoi(alphanum.substr(1)) > board_width)
+    if (!std::isdigit(digit) || std::stoi(alphanum.substr(1)))
         return false;
 
     return true;
@@ -50,44 +49,36 @@ bool global::IsValidAlphaNumeric (const std::string &alphanum)
 
 void global::AssertIsValidAlphaNumeric ()
 {
+    assert(!IsValidAlphaNumeric(std::string("")));
+    assert(!IsValidAlphaNumeric(std::string("A")));
+    assert(!IsValidAlphaNumeric(std::string("AH")));
+    assert(!IsValidAlphaNumeric(std::string("1A")));
+    assert(!IsValidAlphaNumeric(std::string("!*")));
+    assert(!IsValidAlphaNumeric(std::string("A*")));
+    assert(!IsValidAlphaNumeric(std::string("!1")));
+    assert(!IsValidAlphaNumeric(std::string("A0")));
+
     std::string lo_num = "1";
-    std::string hi_num = std::to_string(board_width);
+    std::string hi_num = std::to_string(global::board_width);
     std::string lo_alp = "A";
     std::string hi_alp = "A";
-    hi_alp.at(0) += board_height - 1;
-
-    assert(!IsValidAlphaNumeric(std::string("")));
-    assert(!IsValidAlphaNumeric(lo_alp));
-    assert(!IsValidAlphaNumeric(hi_alp));
-    assert(!IsValidAlphaNumeric(lo_num));
-    assert(!IsValidAlphaNumeric(hi_num));
-    assert(!IsValidAlphaNumeric(hi_alp + lo_alp));
-    assert(!IsValidAlphaNumeric(lo_num + hi_alp));
-    assert(!IsValidAlphaNumeric(lo_num + hi_num));
-    assert(!IsValidAlphaNumeric(std::string("!*")));
-    assert(!IsValidAlphaNumeric(hi_alp + "*"));
-    assert(!IsValidAlphaNumeric("!" + lo_num));
-
-    assert(IsValidAlphaNumeric(lo_alp + lo_num));
-    assert(IsValidAlphaNumeric(lo_alp + hi_num));
-    assert(IsValidAlphaNumeric(hi_alp + lo_num));
-    assert(IsValidAlphaNumeric(hi_alp + hi_num));
+    hi_alp.at(0) += global::board_height - 1;
 }
 
 unsigned int global::AlphaNumericToCoordinate (std::string &alphanum)
 {
-    unsigned char alpha = std::toupper(alphanum.at(0));
+    unsigned char alpha = alphanum.at(0);
     unsigned int num = std::stoi(alphanum.substr(1));
 
-    return (alpha - 'A') * global::board_width + num - 1;
+    return int(alpha - 'A') * global::board_width + num;
 }
 
 void global::PlayGame ()
 {
     do
     {
-        unsigned int num_players = QueryNumPlayers();
-        assert(num_players <= 2);
+        int num_players = QueryNumPlayers();
+        assert(num_players >= 0 && num_players <= 2);
 
         std::vector <std::unique_ptr<Player>> players;
         assert(players.empty());
@@ -96,11 +87,11 @@ void global::PlayGame ()
     } while (QueryNewGame());
 }
 
-unsigned int global::QueryNumPlayers ()
+int global::QueryNumPlayers ()
 {
-    unsigned int num_players = 3;
+    int num_players = -1;
 
-    while (num_players > 2)
+    while (num_players < 0 || num_players > 2)
     {
         std::string input;
 
@@ -114,35 +105,16 @@ unsigned int global::QueryNumPlayers ()
     return num_players;
 }
 
-void global::AddPlayers (
-        std::vector <std::unique_ptr<Player>> &players,
-        unsigned int num_players)
+void global::AddPlayers(std::vector <std::unique_ptr<Player>> &players, int num_players)
 {
     // Add all Human players.
     for (int i = 0; i < num_players; ++i)
     {
-        // Output 200 newlines to hide previous player's ship board setup.
-        if (num_players > 1)
-        {
-            for (int i = 0; i < 20; ++i)
-                std::cout << "\n\n\n\n\n\n\n\n\n\n";
-            std::cout << "Player " << i + 1 << " ship setup:\n";
-        }
-
         std::unique_ptr<Human> human = std::make_unique<Human>();
         human->PlaceShips();
         players.push_back(std::move(human));
     }
     assert(players.size() == num_players);
-
-    // Add all Computer players.
-    for (int i = num_players; i < 2; ++i)
-    {
-        std::unique_ptr<Computer> computer = std::make_unique<Computer>();
-        computer->PlaceShips();
-        players.push_back(std::move(computer));
-    }
-    assert(players.size() == 2);
 }
 
 bool global::QueryNewGame ()

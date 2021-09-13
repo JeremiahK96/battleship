@@ -7,30 +7,41 @@
 class Player
 {
 protected:
-    enum tile
-    {
-        TL_EMPTY,
-        TL_VERTICAL,
-        TL_HORIZONTAL,
-        TL_NORTH,
-        TL_SOUTH,
-        TL_EAST,
-        TL_WEST
+    enum ship {
+        SHIP_EMPTY,
+        SHIP_VERTICAL,
+        SHIP_HORIZONTAL,
+        SHIP_NORTH,
+        SHIP_SOUTH,
+        SHIP_EAST,
+        SHIP_WEST
     };
-    std::vector<tile> board;
-    void ClearBoard ();
 
-    enum ship_direction
-    {
+    enum guess {
+        NOGUESS,
+        MISS,
+        HIT
+    };
+
+    enum ship_dir {
         NORTH,
         SOUTH,
         EAST,
         WEST
     };
-    virtual void PlaceShip (int ship_index) = 0;
-    int GetShipDelta(Player::ship_direction dir);
-    bool ShipOrientationIsValid (int pos, ship_direction dir, int ship_len);
-    void AddShip (int pos, ship_direction dir, int ship_len);
+
+    std::vector<ship> ships;
+    std::vector<guess> guesses;
+
+    void ClearBoards ();
+
+    virtual void PlaceShip (unsigned int ship_index) = 0;
+    int GetShipDelta(Player::ship_dir dir);
+    bool ShipOrientationIsValid (
+            unsigned int pos,
+            ship_dir dir,
+            unsigned int ship_len);
+    void AddShip (unsigned int pos, ship_dir dir, unsigned int ship_len);
 
 public:
     virtual void PlaceShips () = 0;
@@ -40,14 +51,14 @@ class Human :
     public Player
 {
 protected:
-    void DisplayBoard ();
-    char GetCharAtPos (int pos);
+    void DisplayShips ();
+    char GetShipCharAtPos (unsigned int pos);
+    unsigned int QueryCoordinate ();
 
-    void PlaceShip (int ship_index);
-    void DisplayShip (int ship_index);
-    int QueryShipPosition ();
-    ship_direction QueryShipDirection ();
-    int QueryCoordinate ();
+    void PlaceShip (unsigned int ship_index);
+    void DisplayShip (unsigned int ship_index);
+    unsigned int GetShipPosition ();
+    ship_dir GetShipDirection ();
 
 public:
     void PlaceShips ();
@@ -57,7 +68,7 @@ class Computer :
     public Player
 {
 protected:
-    void PlaceShip (int ship_index);
+    void PlaceShip (unsigned int ship_index);
 
 public:
     void PlaceShips ();
