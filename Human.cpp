@@ -139,9 +139,9 @@ char Human::GetCharAtPos (int pos)
     {
         case TL_EMPTY:      return '.';
         case TL_VERTICAL:   return '/';
-        case TL_HORIZONTAL: return '/';
-        case TL_NORTH:      return '^';
-        case TL_SOUTH:      return 'v';
+        case TL_HORIZONTAL: return '\\';
+        case TL_NORTH:      return 'v';
+        case TL_SOUTH:      return '^';
         case TL_EAST:       return '<';
         case TL_WEST:       return '>';
     }

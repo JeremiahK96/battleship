@@ -34,10 +34,19 @@ bool Player::ShipOrientationIsValid (
 {
     int delta = GetShipDelta(dir);
 
+    // Disallow ships running off top/bottom of board or crossing other ships.
     for (int i = 0; i < ship_len; ++i)
     {
         int coord = pos + delta * i;
         if (!global::CoordinateInBounds(coord) || board.at(coord) != TL_EMPTY)
+            return false;
+    }
+
+    // Disallow ships running off sides of board.
+    if (dir == Player::EAST || dir == Player::WEST)
+    {
+        int bow_pos = pos + delta * (ship_len - 1);
+        if (pos / global::board_width != bow_pos / global::board_width)
             return false;
     }
 
@@ -46,8 +55,37 @@ bool Player::ShipOrientationIsValid (
 
 void Player::AddShip (int pos, Player::ship_direction dir, int ship_len)
 {
-    int delta = GetShipDelta(dir);
+    tile stern;
+    tile deck;
+    tile bow;
 
-    for (int i = 0; i < ship_len; ++i)
-        board.at(pos + delta * i) = TL_VERTICAL;
+    switch (dir)
+    {
+        case NORTH: stern   = TL_NORTH;
+                    deck    = TL_VERTICAL;
+                    bow     = TL_SOUTH;
+                    break;
+
+        case SOUTH: stern   = TL_SOUTH;
+                    deck    = TL_VERTICAL;
+                    bow     = TL_NORTH;
+                    break;
+
+        case EAST:  stern   = TL_EAST;
+                    deck    = TL_HORIZONTAL;
+                    bow     = TL_WEST;
+                    break;
+
+        case WEST:  stern   = TL_WEST;
+                    deck    = TL_HORIZONTAL;
+                    bow     = TL_EAST;
+                    break;
+    }
+
+    int delta = GetShipDelta(dir);
+    for (int i = 1; i < ship_len - 1; ++i)
+        board.at(pos + delta * i) = deck;
+
+    board.at(pos) = stern;
+    board.at(pos + delta * (ship_len - 1)) = bow;
 }
