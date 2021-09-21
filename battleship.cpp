@@ -4,7 +4,7 @@ int main (int argv, char **argc)
 {
     global::DoAsserts();
 
-    global::SplashScreen();
+    global::ShowSplashScreen();
     global::PlayGame();
 
     return 0;

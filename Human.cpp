@@ -9,6 +9,7 @@ void Human::PlaceShips ()
     ClearBoards();
     DisplayShips();
 
+    // num_ships = the number of elements in global::ship_sizes
     unsigned int num_ships
             = sizeof(global::ship_sizes) / sizeof(global::ship_sizes[0]);
 
@@ -19,7 +20,7 @@ void Human::PlaceShips ()
     }
 }
 
-void Human::PlaceShip (unsigned int ship_index)
+void Human::PlaceShip (const unsigned int ship_index)
 {
     unsigned int pos;
     ship_dir dir;
@@ -41,25 +42,29 @@ void Human::PlaceShip (unsigned int ship_index)
     AddShip(pos, dir, ship_len);
 }
 
-void Human::DisplayShip (unsigned int ship_index)
+void Human::DisplayShip (const unsigned int ship_index)
 {
     unsigned int ship_length = global::ship_sizes[ship_index];
 
     std::cout
         << "Ship #" << ship_index + 1
         << ", length = " << ship_length << ": <";
+
     for (int i = 0; i < ship_length - 2; ++i)
         std::cout << '/';
+
     std::cout << ">\n";
 }
 
 unsigned int Human::GetShipPosition ()
 {
     unsigned int coord;
+
     do
     {
         std::cout
             << "Enter the alphanumeric coordinate to position the ship on: ";
+
         coord = QueryCoordinate();
     }
     while (!global::CoordinateInBounds(coord) || ships.at(coord) != SHIP_EMPTY);
@@ -71,13 +76,15 @@ Player::ship_dir Human::GetShipDirection ()
 {
     // North/South/East/West/Up/Down/Left/Right/Vertical/Horizontal
     std::string valid_chars = "NSEWUDLRVH";
-    unsigned char input_char = ' ';
+
     std::string input;
+    unsigned char input_char = ' ';
 
     do
     {
         std::cout << "Enter the direction the ship should face: ";
         std::getline(std::cin, input);
+
         if (!input.empty())
             input_char = std::toupper(input.at(0));
     }
@@ -109,8 +116,10 @@ void Human::DisplayShips ()
 {
     // Draw top row with numerical labels.
     std::cout << "\n ";
+
     for (int i = 0; i < global::board_width; ++i)
         std::cout << ' ' << i + 1;
+
     std::cout << '\n';
 
     // Draw each board row with alpha label on left.
@@ -120,12 +129,14 @@ void Human::DisplayShips ()
 
         for (int x = 0; x < global::board_height; ++x)
             std::cout << ' ' << GetShipCharAtPos(y * global::board_width + x);
+
         std::cout << '\n';
     }
+
     std::cout << '\n';
 }
 
-char Human::GetShipCharAtPos (unsigned int pos)
+char Human::GetShipCharAtPos (const unsigned int pos)
 {
     switch (ships.at(pos))
     {

@@ -13,13 +13,13 @@ void global::DoAsserts ()
     AssertIsValidAlphaNumeric();
 }
 
-void global::SplashScreen ()
+void global::ShowSplashScreen ()
 {
     std::cout
         << "Welcome to battleship, a terminal-based navy combat game.\n\n";
 }
 
-bool global::CoordinateInBounds (unsigned int coord)
+bool global::CoordinateInBounds (const unsigned int coord)
 {
     return coord < board_area;
 }
@@ -76,6 +76,8 @@ void global::AssertIsValidAlphaNumeric ()
 
 unsigned int global::AlphaNumericToCoordinate (std::string &alphanum)
 {
+    assert(IsValidAlphaNumeric(alphanum));
+
     unsigned char alpha = std::toupper(alphanum.at(0));
     unsigned int num = std::stoi(alphanum.substr(1));
 
@@ -126,8 +128,10 @@ void global::AddPlayers (
         {
             for (int i = 0; i < 20; ++i)
                 std::cout << "\n\n\n\n\n\n\n\n\n\n";
-            std::cout << "Player " << i + 1 << " ship setup:\n";
+            std::cout << "Player " << i + 1 << ' ';
         }
+
+        std::cout << "Ship Setup:\n";
 
         std::unique_ptr<Human> human = std::make_unique<Human>();
         human->PlaceShips();

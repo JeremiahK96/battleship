@@ -14,16 +14,17 @@ namespace global
     inline const unsigned int ship_sizes[] = { 5, 4, 3, 3, 2 };
 
     void DoAsserts ();
-    void SplashScreen ();
 
+    void ShowSplashScreen ();
     void PlayGame ();
+
     unsigned int QueryNumPlayers ();
     void AddPlayers(
             std::vector <std::unique_ptr<Player>> &players,
-            unsigned int num_players);
+            const unsigned int num_players);
     bool QueryNewGame ();
 
-    bool CoordinateInBounds (unsigned int coord);
+    bool CoordinateInBounds (const unsigned int coord);
     void AssertCoordinateInBounds ();
 
     bool IsValidAlphaNumeric (const std::string &alphanum);

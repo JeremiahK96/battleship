@@ -35,13 +35,16 @@ protected:
 
     void ClearBoards ();
 
-    virtual void PlaceShip (unsigned int ship_index) = 0;
-    int GetShipDelta(Player::ship_dir dir);
+    virtual void PlaceShip (const unsigned int ship_index) = 0;
+    int GetShipDelta(const Player::ship_dir dir);
     bool ShipOrientationIsValid (
-            unsigned int pos,
-            ship_dir dir,
-            unsigned int ship_len);
-    void AddShip (unsigned int pos, ship_dir dir, unsigned int ship_len);
+            const unsigned int pos,
+            const ship_dir dir,
+            const unsigned int ship_len);
+    void AddShip (
+            const unsigned int pos,
+            const ship_dir dir,
+            const unsigned int ship_len);
 
 public:
     virtual void PlaceShips () = 0;
@@ -52,11 +55,11 @@ class Human :
 {
 protected:
     void DisplayShips ();
-    char GetShipCharAtPos (unsigned int pos);
+    char GetShipCharAtPos (const unsigned int pos);
     unsigned int QueryCoordinate ();
 
-    void PlaceShip (unsigned int ship_index);
-    void DisplayShip (unsigned int ship_index);
+    void PlaceShip (const unsigned int ship_index);
+    void DisplayShip (const unsigned int ship_index);
     unsigned int GetShipPosition ();
     ship_dir GetShipDirection ();
 
@@ -68,7 +71,7 @@ class Computer :
     public Player
 {
 protected:
-    void PlaceShip (unsigned int ship_index);
+    void PlaceShip (const unsigned int ship_index);
 
 public:
     void PlaceShips ();
